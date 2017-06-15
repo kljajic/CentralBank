@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -79,6 +80,7 @@ import com.xsdschemas.clearingandsettlement.Mt102Request;
 })
 public class ClearingAndSettlementItem {
 	
+	@XmlTransient
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -108,6 +110,7 @@ public class ClearingAndSettlementItem {
     @Transient
     protected XMLGregorianCalendar statementDate;
     
+    @XmlTransient
     @Column(nullable = false)
     private Date dateStatementDate;
     
@@ -116,6 +119,7 @@ public class ClearingAndSettlementItem {
     @Size(max = 18)
     protected String originatorAccountNumber;
     
+    @XmlElement(required =true)
     @Column(nullable = true)
     protected short chargeModel;
     
@@ -129,6 +133,7 @@ public class ClearingAndSettlementItem {
     @Size(max = 18)
     protected String recieverAccountNumber;
     
+    @XmlElement(required =true)
     @Column(nullable = true)
     protected short clearanceModel;
     
@@ -147,6 +152,7 @@ public class ClearingAndSettlementItem {
     @Size(min = 3, max = 3)
     protected String currency;
     
+    @XmlTransient
     @ManyToOne(optional = false)
     private Mt102Request mt102Request;
 

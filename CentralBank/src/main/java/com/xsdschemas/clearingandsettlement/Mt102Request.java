@@ -30,10 +30,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import com.xsdschemas.ClearingAndSettlementRequestResponse;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.model.ClearingAndSettlementRequestResponse;
 import com.xsdschemas.clearingandsettlementitem.ClearingAndSettlementItem;
 
 
@@ -82,6 +84,7 @@ import com.xsdschemas.clearingandsettlementitem.ClearingAndSettlementItem;
 @Entity
 public class Mt102Request {
 	
+	@XmlTransient
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -127,6 +130,7 @@ public class Mt102Request {
     protected XMLGregorianCalendar currencyDate;
     
     @Column(nullable = false)
+    @XmlTransient
     private Date dateCurrencyDate;
     
     @XmlElement(required = true)
@@ -135,12 +139,14 @@ public class Mt102Request {
     protected XMLGregorianCalendar date;
     
     @Column(nullable = false)
+    @XmlTransient
     private Date dateDate;
     
     @XmlElement(required = true)
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "mt102Request", orphanRemoval = true, targetEntity = ClearingAndSettlementItem.class)
     protected Set<ClearingAndSettlementItem> statementItems;
-
+    
+    @XmlTransient
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "mt102Request", orphanRemoval = true, targetEntity = ClearingAndSettlementRequestResponse.class)
     protected Set<ClearingAndSettlementRequestResponse> clearingAndSettlementRequestResponses;
     /**
@@ -381,6 +387,7 @@ public class Mt102Request {
      * 
      * 
      */
+    @JsonIgnore
     public Set<ClearingAndSettlementItem> getStatementItems() {
         if (statementItems == null) {
             statementItems = new HashSet<ClearingAndSettlementItem>();

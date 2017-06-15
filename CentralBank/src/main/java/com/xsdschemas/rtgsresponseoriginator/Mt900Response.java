@@ -9,14 +9,30 @@
 package com.xsdschemas.rtgsresponseoriginator;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import javax.validation.constraints.Digits;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.hibernate.validator.constraints.Length;
+
+import com.model.RtgsRequestResponse;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -43,6 +59,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * 
  * 
  */
+@Entity
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "messageId",
@@ -55,22 +72,58 @@ import javax.xml.datatype.XMLGregorianCalendar;
 })
 @XmlRootElement(name = "mt900Response")
 public class Mt900Response {
-
+	
+	@XmlTransient
+	@Id
+	@GeneratedValue
+	private Long id;
+	
+	@Column(nullable=false)
+	@Length(min=1, max=50)
     @XmlElement(required = true)
     protected String messageId;
+	
+	@Column(nullable=false)
+	@Length(min=1, max=8)
     @XmlElement(required = true)
     protected String originatorBankSwiftCode;
-    @XmlElement(required = true)
+	
+	@Column(nullable=false)
+	@Length(min=1, max=20)
+	@XmlElement(required = true)
     protected String originatorBankTransactionAccount;
+	
+	@Column(nullable=false)
+	@Length(min=1, max=20)
     @XmlElement(required = true)
     protected String requestMessageId;
-    @XmlElement(required = true)
+	
+    @XmlElement(required=false)
     @XmlSchemaType(name = "date")
+    @Transient
     protected XMLGregorianCalendar currencyDate;
+    
+    @XmlTransient
+    @Column(nullable=false)
+    private Date currencyDateDatabase;
+    
+    @Column(nullable=false)
+    @Digits(integer=17, fraction=2)
     @XmlElement(required = true)
     protected BigDecimal amount;
+    
+    @Column(nullable=false)
+    @Length(min=1, max=3)
     @XmlElement(required = true)
     protected String currency;
+    
+    @XmlTransient
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="mt900Response", orphanRemoval=true, targetEntity=RtgsRequestResponse.class)
+    private Set<RtgsRequestResponse> rtgsRequestResponse;
+    
+    @XmlTransient
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "mt900Response", orphanRemoval = true, targetEntity = RtgsRequestResponse.class)
+	private Set<RtgsRequestResponse> clearingAndSettlementRequestResponse;
 
     /**
      * Gets the value of the messageId property.
@@ -236,8 +289,25 @@ public class Mt900Response {
      *     {@link String }
      *     
      */
+    
     public void setCurrency(String value) {
         this.currency = value;
     }
+    
+    
+    public Long getId() {
+		return id;
+	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Date getCurrencyDateDatabase() {
+		return currencyDateDatabase;
+	}
+
+	public void setCurrencyDateDatabase(Date currencyDateDatabase) {
+		this.currencyDateDatabase = currencyDateDatabase;
+	}
 }

@@ -10,6 +10,7 @@ package com.xsdschemas.rtgsrequest;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,6 +19,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -25,10 +27,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import com.xsdschemas.clearingandsettlementitem.ClearingAndSettlementItem;
+import com.model.RtgsRequestResponse;
 
 
 /**
@@ -92,6 +95,7 @@ import com.xsdschemas.clearingandsettlementitem.ClearingAndSettlementItem;
 @Entity
 public class Mt103Request {
 	
+	@XmlTransient
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -138,15 +142,19 @@ public class Mt103Request {
     
     @XmlElement(required = true)
     @XmlSchemaType(name = "date")
+    @Transient
     protected XMLGregorianCalendar statementDate;
     
+    @XmlTransient
     @Column(nullable = false)
     private Date dateStatementDate;
     
     @XmlElement(required = true)
     @XmlSchemaType(name = "date")
+    @Transient
     protected XMLGregorianCalendar currencyDate;
     
+    @XmlTransient
     @Column(nullable = false)
     private Date dateCurrencyDate;
     
@@ -155,10 +163,12 @@ public class Mt103Request {
     @Size(max = 18)
     protected String originatorAccountNumber;
     
+    @XmlElement(required =true)
     @Column(nullable = true)
     protected short chargeModel;
     
     @XmlElement(required = true)
+    @Column(nullable = false)
     protected String chargeDialNumber;
     
     @XmlElement(required = true)
@@ -166,6 +176,7 @@ public class Mt103Request {
     @Size(max = 18)
     protected String recieverAccountNumber;
     
+    @XmlElement(required =true)
     @Column(nullable = true)
     protected short clearanceModel;
     
@@ -184,8 +195,9 @@ public class Mt103Request {
     @Size(min = 3, max = 3)
     protected String currency;
     
-    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "mt103Request", orphanRemoval = true, targetEntity = RtgsRequestResponses.class)
-    //private Set<RtgsRequestResponse> rtgsRequestResponses;
+    @XmlTransient
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "mt103Request", orphanRemoval = true, targetEntity = RtgsRequestResponse.class)
+    private Set<RtgsRequestResponse> rtgsRequestResponses;
 
     /**
      * Gets the value of the messageId property.
@@ -614,5 +626,17 @@ public class Mt103Request {
 	public Date getDateCurrencyDate() {
 		return dateCurrencyDate;
 	}
-    
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setDateStatementDate(Date dateStatementDate) {
+		this.dateStatementDate = dateStatementDate;
+	}
+
+	public void setDateCurrencyDate(Date dateCurrencyDate) {
+		this.dateCurrencyDate = dateCurrencyDate;
+	}
+	
 }
