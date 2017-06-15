@@ -67,7 +67,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "clearanceDialNumber",
     "amount",
     "currency",
-    "emergency"
+    "emergency",
+    "placeOfAcceptance"
 })
 @XmlRootElement(name = "statementRequest")
 public class StatementRequest {
@@ -100,7 +101,10 @@ public class StatementRequest {
     protected BigDecimal amount;
     @XmlElement(required = true)
     protected String currency;
+    @XmlElement
     protected boolean emergency;
+    @XmlElement
+    private String placeOfAcceptance;
 
     /**
      * Gets the value of the messageId property.
@@ -438,4 +442,12 @@ public class StatementRequest {
         this.emergency = value;
     }
 
+	public String getPlaceOfAcceptance() {
+		return placeOfAcceptance;
+	}
+
+	public void setPlaceOfAcceptance(String placeOfAcceptance) {
+		this.placeOfAcceptance = placeOfAcceptance;
+	}
+    
 }
