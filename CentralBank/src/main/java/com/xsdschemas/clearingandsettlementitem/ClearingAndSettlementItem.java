@@ -9,12 +9,24 @@
 package com.xsdschemas.clearingandsettlementitem;
 
 import java.math.BigDecimal;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
+
+import com.xsdschemas.clearingandsettlement.Mt102Request;
 
 
 /**
@@ -48,6 +60,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * 
  * 
  */
+@Entity
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "clearingAndSettlementItem", propOrder = {
     "requestId",
@@ -65,32 +78,77 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "currency"
 })
 public class ClearingAndSettlementItem {
+	
+	@Id
+	@GeneratedValue
+	private Long id;
 
+	@Column(nullable = false)
     @XmlElement(required = true)
+    @Size(max = 50)
     protected String requestId;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 255)
     protected String originator;
+  
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 255)
     protected String paymentPurpose;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 255)
     protected String reciever;
+    
     @XmlElement(required = true)
     @XmlSchemaType(name = "date")
+    @Transient
     protected XMLGregorianCalendar statementDate;
+    
+    @Column(nullable = false)
+    private Date dateStatementDate;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 18)
     protected String originatorAccountNumber;
+    
+    @Column(nullable = true)
     protected short chargeModel;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 20)
     protected String chargeDialNumber;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 18)
     protected String recieverAccountNumber;
+    
+    @Column(nullable = true)
     protected short clearanceModel;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 20)
     protected String clearanceDialNumber;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Digits(integer = 17, fraction = 2)
     protected BigDecimal amount;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(min = 3, max = 3)
     protected String currency;
+    
+    @ManyToOne(optional = false)
+    private Mt102Request mt102Request;
 
     /**
      * Gets the value of the requestId property.
@@ -387,5 +445,17 @@ public class ClearingAndSettlementItem {
     public void setCurrency(String value) {
         this.currency = value;
     }
+
+	public Long getId() {
+		return id;
+	}
+
+	public Date getDateStatementDate() {
+		return dateStatementDate;
+	}
+
+	public Mt102Request getMt102Request() {
+		return mt102Request;
+	}
 
 }

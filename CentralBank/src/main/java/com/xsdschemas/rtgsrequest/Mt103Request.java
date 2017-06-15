@@ -9,6 +9,17 @@
 package com.xsdschemas.rtgsrequest;
 
 import java.math.BigDecimal;
+import java.util.Date;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -16,6 +27,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
+
+import com.xsdschemas.clearingandsettlementitem.ClearingAndSettlementItem;
 
 
 /**
@@ -76,44 +89,103 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "currency"
 })
 @XmlRootElement(name = "mt103Request")
+@Entity
 public class Mt103Request {
+	
+	@Id
+	@GeneratedValue
+	private Long id;
 
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 50)
     protected String messageId;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 8)
     protected String originatorBankSwiftCode;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 18)
     protected String originatorBankTransactionAccount;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 8)
     protected String recieverBankSwiftCode;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 18)
     protected String recieverBankTransactionAccount;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 255)
     protected String originator;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 255)
     protected String paymentPurpose;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 255)
     protected String reciever;
+    
     @XmlElement(required = true)
     @XmlSchemaType(name = "date")
     protected XMLGregorianCalendar statementDate;
+    
+    @Column(nullable = false)
+    private Date dateStatementDate;
+    
     @XmlElement(required = true)
     @XmlSchemaType(name = "date")
     protected XMLGregorianCalendar currencyDate;
+    
+    @Column(nullable = false)
+    private Date dateCurrencyDate;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 18)
     protected String originatorAccountNumber;
+    
+    @Column(nullable = true)
     protected short chargeModel;
+    
     @XmlElement(required = true)
     protected String chargeDialNumber;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 18)
     protected String recieverAccountNumber;
+    
+    @Column(nullable = true)
     protected short clearanceModel;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 20)
     protected String clearanceDialNumber;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Digits(integer = 17, fraction = 2)
     protected BigDecimal amount;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(min = 3, max = 3)
     protected String currency;
+    
+    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "mt103Request", orphanRemoval = true, targetEntity = RtgsRequestResponses.class)
+    //private Set<RtgsRequestResponse> rtgsRequestResponses;
 
     /**
      * Gets the value of the messageId property.
@@ -531,4 +603,16 @@ public class Mt103Request {
         this.currency = value;
     }
 
+	public Long getId() {
+		return id;
+	}
+
+	public Date getDateStatementDate() {
+		return dateStatementDate;
+	}
+
+	public Date getDateCurrencyDate() {
+		return dateCurrencyDate;
+	}
+    
 }

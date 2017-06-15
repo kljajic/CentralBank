@@ -10,7 +10,21 @@ package com.xsdschemas.clearingandsettlement;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -18,6 +32,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
+
+import com.xsdschemas.ClearingAndSettlementRequestResponse;
 import com.xsdschemas.clearingandsettlementitem.ClearingAndSettlementItem;
 
 
@@ -63,31 +79,70 @@ import com.xsdschemas.clearingandsettlementitem.ClearingAndSettlementItem;
     "statementItems"
 })
 @XmlRootElement(name = "mt102Request")
+@Entity
 public class Mt102Request {
+	
+	@Id
+	@GeneratedValue
+	private Long id;
 
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 50)
     protected String messageId;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 8)
     protected String originatorBankSwiftCode;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 18)
     protected String originatorBankTransactionAccount;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 8)
     protected String recieverBankSwiftCode;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(max = 18)
     protected String recieverBankTransactionAccount;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Digits(integer=17, fraction=2)
     protected BigDecimal amount;
+    
     @XmlElement(required = true)
+    @Column(nullable = false)
+    @Size(min = 3, max = 3)
     protected String currency;
+    
     @XmlElement(required = true)
     @XmlSchemaType(name = "date")
+    @Transient
     protected XMLGregorianCalendar currencyDate;
+    
+    @Column(nullable = false)
+    private Date dateCurrencyDate;
+    
     @XmlElement(required = true)
     @XmlSchemaType(name = "date")
+    @Transient
     protected XMLGregorianCalendar date;
+    
+    @Column(nullable = false)
+    private Date dateDate;
+    
     @XmlElement(required = true)
-    protected List<ClearingAndSettlementItem> statementItems;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "mt102Request", orphanRemoval = true, targetEntity = ClearingAndSettlementItem.class)
+    protected Set<ClearingAndSettlementItem> statementItems;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "mt102Request", orphanRemoval = true, targetEntity = ClearingAndSettlementRequestResponse.class)
+    protected Set<ClearingAndSettlementRequestResponse> clearingAndSettlementRequestResponses;
     /**
      * Gets the value of the messageId property.
      * 
@@ -326,11 +381,24 @@ public class Mt102Request {
      * 
      * 
      */
-    public List<ClearingAndSettlementItem> getStatementItems() {
+    public Set<ClearingAndSettlementItem> getStatementItems() {
         if (statementItems == null) {
-            statementItems = new ArrayList<ClearingAndSettlementItem>();
+            statementItems = new HashSet<ClearingAndSettlementItem>();
         }
         return this.statementItems;
     }
+
+	public Long getId() {
+		return id;
+	}
+
+	public Date getDateCurrencyDate() {
+		return dateCurrencyDate;
+	}
+
+	public Date getDateDate() {
+		return dateDate;
+	}
+    
 
 }
