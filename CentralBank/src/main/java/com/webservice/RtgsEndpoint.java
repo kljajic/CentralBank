@@ -1,9 +1,11 @@
 package com.webservice;
 
+import java.io.IOException;
 import java.util.GregorianCalendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.oxm.XmlMappingException;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -16,6 +18,7 @@ import com.service.Mt103Service;
 import com.service.Mt900Service;
 import com.service.Mt910Service;
 import com.service.RtgsRequestResponseService;
+import com.webservice.client.BankClient;
 import com.xsdschemas.rtgsrequest.Mt103Request;
 import com.xsdschemas.rtgsresponseoriginator.Mt900Response;
 import com.xsdschemas.rtgsresponsereciever.Mt910Response;
@@ -90,6 +93,18 @@ public class RtgsEndpoint {
 		mt910Service.save(mt910);
 		mt103Service.save(request);
 		rtgsRequestResponseService.save(rtgsRequestResponse);
+		
+		BankClient bankClient = applicationContext.getBean(BankClient.class);
+		try {
+			System.out.println("rek");
+			boolean result = bankClient.getRtgsResponse(request, mt910);
+		} catch (XmlMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return mt900;
 	}
