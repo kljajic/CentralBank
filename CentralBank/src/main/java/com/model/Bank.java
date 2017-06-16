@@ -62,11 +62,11 @@ public class Bank {
 	private boolean active;
 	
 	@Column(nullable = false)
-	@Size(min=1, max=50)
+	@Size(min=1, max=255)
 	private String mt103Service;
 	
 	@Column(nullable = false)
-	@Size(min=1, max=50)
+	@Size(min=1, max=255)
 	private String mt910Service;
 	
 	public Bank() {	}
@@ -161,5 +161,29 @@ public class Bank {
 
 	public void setTransactionAccount(String transactionAccount) {
 		this.transactionAccount = transactionAccount;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public String getMt103Service() {
+		return mt103Service;
+	}
+
+	public void setMt103Service(String mt103Service) {
+		this.mt103Service = mt103Service;
+	}
+
+	public String getMt910Service() {
+		return mt910Service;
+	}
+
+	public void setMt910Service(String mt910Service) {
+		this.mt910Service = mt910Service;
 	}
 }

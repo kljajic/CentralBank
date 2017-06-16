@@ -1,7 +1,6 @@
 package com.webservice;
 
 import java.io.IOException;
-import java.util.GregorianCalendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -18,7 +17,8 @@ import com.service.Mt103Service;
 import com.service.Mt900Service;
 import com.service.Mt910Service;
 import com.service.RtgsRequestResponseService;
-import com.webservice.client.BankClient;
+import com.webservice.client.BankClientMt103;
+import com.webservice.client.BankClientMt910;
 import com.xsdschemas.rtgsrequest.Mt103Request;
 import com.xsdschemas.rtgsresponseoriginator.Mt900Response;
 import com.xsdschemas.rtgsresponsereciever.Mt910Response;
@@ -80,8 +80,6 @@ public class RtgsEndpoint {
 		Bank bankOriginator = bankService.findByTransactionAccountNumber(request.getOriginatorBankTransactionAccount().substring(0, 3));
 		Bank bankReciever = bankService.findByTransactionAccountNumber(request.getRecieverBankTransactionAccount().substring(0, 3));
 		
-		System.out.println(bankOriginator.getName());
-		System.out.println(bankReciever.getName());
 		
 		rtgsRequestResponse.setOriginatorBank(bankOriginator);
 		rtgsRequestResponse.setRecieverBank(bankReciever);
@@ -94,10 +92,12 @@ public class RtgsEndpoint {
 		mt103Service.save(request);
 		rtgsRequestResponseService.save(rtgsRequestResponse);
 		
-		BankClient bankClient = applicationContext.getBean(BankClient.class);
+		BankClientMt103 bankClient = applicationContext.getBean(BankClientMt103.class);
+		BankClientMt910 bankClientMt910 = applicationContext.getBean(BankClientMt910.class);;
+		
 		try {
-			System.out.println("rek");
-			boolean result = bankClient.getRtgsResponse(request, mt910);
+			boolean resultReq = bankClient.getRtgsResponseBack(request, bankReciever.getMt103Service());
+			boolean resultMt910 = bankClientMt910.getRtgsResponseBack(mt910, bankReciever.getMt910Service());
 		} catch (XmlMappingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -105,7 +105,6 @@ public class RtgsEndpoint {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return mt900;
 	}
 }

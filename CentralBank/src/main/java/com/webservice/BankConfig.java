@@ -1,26 +1,49 @@
 package com.webservice;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
-import com.webservice.client.BankClient;
+import com.webservice.client.BankClientMt103;
+import com.webservice.client.BankClientMt910;
+import com.xsdschemas.rtgsrequest.Mt103Request;
+import com.xsdschemas.rtgsresponsereciever.Mt910Response;
 
 @Configuration
 public class BankConfig {
 	
 	@Bean
-	public Jaxb2Marshaller marshaller() {
+	@Qualifier("marshallerForMt103")
+	public Jaxb2Marshaller marshallerForMt103() {
 		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-		marshaller.setPackagesToScan("com.xsdschemas");
+		marshaller.setContextPath("com.xsdschemas.rtgsrequest");
+		System.out.println(marshaller.supports(Mt103Request.class));
+		return marshaller;
+	}
+	
+	@Bean
+	@Qualifier("marshallerForMt910")
+	public Jaxb2Marshaller marshallerForMt910() {
+		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+		marshaller.setContextPath("com.xsdschemas.rtgsresponsereciever");
+		System.out.println(marshaller.supports(Mt910Response.class));
 		return marshaller;
 	}
 
 	@Bean
-	public BankClient bankClient(Jaxb2Marshaller marshaller) {
-		BankClient client = new BankClient();
-		client.setMarshaller(marshaller);
-		client.setUnmarshaller(marshaller);
+	public BankClientMt103 bankClientMt103(@Qualifier("marshallerForMt103") Jaxb2Marshaller marshallerForMt103) {
+		BankClientMt103 client = new BankClientMt103();
+		client.setMarshaller(marshallerForMt103);
+		client.setUnmarshaller(marshallerForMt103);
+		return client;
+	}
+	
+	@Bean
+	public BankClientMt910 bankClientMt910(@Qualifier("marshallerForMt910") Jaxb2Marshaller marshallerForMt910) {
+		BankClientMt910 client = new BankClientMt910();
+		client.setMarshaller(marshallerForMt910);
+		client.setUnmarshaller(marshallerForMt910);
 		return client;
 	}
 
