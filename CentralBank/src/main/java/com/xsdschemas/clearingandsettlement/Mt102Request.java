@@ -88,6 +88,10 @@ public class Mt102Request {
 	@Id
 	@GeneratedValue
 	private Long id;
+	
+	@Column(nullable = false)
+	@XmlTransient
+	private boolean processed;
 
     @XmlElement(required = true)
     @Column(nullable = false)
@@ -406,6 +410,13 @@ public class Mt102Request {
 	public Date getDateDate() {
 		return dateDate;
 	}
-    
 
+	public boolean isProcessed() {
+		return processed;
+	}
+
+	public void setProcessed(boolean processed) {
+		this.processed = processed;
+	}
+	
 }
