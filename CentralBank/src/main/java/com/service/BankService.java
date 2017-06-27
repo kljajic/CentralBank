@@ -8,4 +8,6 @@ public interface BankService {
 	
 	Bank findByTransactionAccountNumber(String identifier);
 	
+	Bank save(Bank bank);
+	
 }

@@ -25,4 +25,9 @@ public class BankServiceImpl implements BankService{
 	public Bank findByTransactionAccountNumber(String identifier) {
 		return bankRepository.findByTransactionAccountNumber(identifier);
 	}
+
+	@Override
+	public Bank save(Bank bank) {
+		return bankRepository.save(bank);
+	}
 }

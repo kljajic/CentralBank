@@ -464,4 +464,8 @@ public class ClearingAndSettlementItem {
 		return mt102Request;
 	}
 
+	public void setDateStatementDate(Date dateStatementDate) {
+		this.dateStatementDate = dateStatementDate;
+	}
+
 }

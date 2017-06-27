@@ -97,7 +97,7 @@ public class RtgsEndpoint {
 		
 		try {
 			boolean resultReq = bankClient.getRtgsResponseBack(request, bankReciever.getMt103Service());
-			boolean resultMt910 = bankClientMt910.getRtgsResponseBack(mt910, bankReciever.getMt910Service());
+			boolean resultMt910 = bankClientMt910.sendM910Response(mt910, bankReciever.getMt910Service());
 		} catch (XmlMappingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

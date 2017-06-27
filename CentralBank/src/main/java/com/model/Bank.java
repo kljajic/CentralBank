@@ -8,12 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlElement;
-
-import org.hibernate.validator.constraints.Email;
 
 @Entity
 public class Bank {
@@ -68,6 +64,9 @@ public class Bank {
 	@Column(nullable = false)
 	@Size(min=1, max=255)
 	private String mt910Service;
+	
+	@Column
+	private double netoAmount;
 	
 	public Bank() {	}
 	
@@ -186,4 +185,13 @@ public class Bank {
 	public void setMt910Service(String mt910Service) {
 		this.mt910Service = mt910Service;
 	}
+
+	public double getNetoAmount() {
+		return netoAmount;
+	}
+
+	public void setNetoAmount(double netoAmount) {
+		this.netoAmount = netoAmount;
+	}
+	
 }

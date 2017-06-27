@@ -9,10 +9,8 @@
 package com.xsdschemas.clearingandsettlement;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -418,5 +416,13 @@ public class Mt102Request {
 	public void setProcessed(boolean processed) {
 		this.processed = processed;
 	}
-	
+
+	public void setDateCurrencyDate(Date dateCurrencyDate) {
+		this.dateCurrencyDate = dateCurrencyDate;
+	}
+
+	public void setDateDate(Date dateDate) {
+		this.dateDate = dateDate;
+	}
+
 }
