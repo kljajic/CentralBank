@@ -12,6 +12,7 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import com.model.Bank;
 import com.service.BankService;
+import com.webservice.client.BankClientMt102;
 import com.webservice.client.BankClientMt910;
 import com.xsdschemas.clearingandsettlement.Mt102Request;
 import com.xsdschemas.rtgsresponseoriginator.Mt900Response;
@@ -24,11 +25,13 @@ public class ClearingSettlementEndpoint {
 	
 	private final BankService bankService;
 	private final BankClientMt910 bankClientMt910;
+	private final BankClientMt102 bankClientMt102;
 	
 	@Autowired
-	public ClearingSettlementEndpoint(BankService bankService, BankClientMt910 bankClientMt910) {
+	public ClearingSettlementEndpoint(BankService bankService, BankClientMt910 bankClientMt910,BankClientMt102 bankClientMt102) {
 		this.bankService = bankService;
 		this.bankClientMt910 = bankClientMt910;
+		this.bankClientMt102 = bankClientMt102;
 	}
 	
 	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "mt102Request")
@@ -47,7 +50,7 @@ public class ClearingSettlementEndpoint {
 		
 		try {
 			bankClientMt910.sendM910Response(mt910Response, recieverBank.getMt910Service());
-			//bankClientMt910.sendMt102Response(request, recieverBank.getM);
+			bankClientMt102.sendMt102Response(request, recieverBank.getMt102Service());
 		} catch (XmlMappingException | IOException e) {
 			e.printStackTrace();
 		}

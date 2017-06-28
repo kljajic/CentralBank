@@ -65,6 +65,18 @@ public class Bank {
 	@Size(min=1, max=255)
 	private String mt910Service;
 	
+	@Column(nullable = false)
+	@Size(min=1, max=255)
+	private String mt102Service;
+	
+	public String getMt102Service() {
+		return mt102Service;
+	}
+
+	public void setMt102Service(String mt102Service) {
+		this.mt102Service = mt102Service;
+	}
+
 	@Column
 	private double netoAmount;
 	

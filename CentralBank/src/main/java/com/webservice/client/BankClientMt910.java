@@ -21,10 +21,5 @@ public class BankClientMt910 extends WebServiceGatewaySupport {
 		return true;
 	}
 	
-	public void sendMt102Response(Mt102Request request, String servicePath)
-			throws XmlMappingException, IOException {
-		getWebServiceTemplate().marshalSendAndReceive(
-				servicePath, request);
-	}
 	
 }
