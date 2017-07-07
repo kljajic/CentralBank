@@ -463,6 +463,14 @@ public class ClearingAndSettlementItem {
 	public Mt102Request getMt102Request() {
 		return mt102Request;
 	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setMt102Request(Mt102Request mt102Request) {
+		this.mt102Request = mt102Request;
+	}
 
 	public void setDateStatementDate(Date dateStatementDate) {
 		this.dateStatementDate = dateStatementDate;

@@ -1,6 +1,7 @@
 package com.webservice;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,12 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import com.model.Bank;
 import com.service.BankService;
+import com.service.ClearingAndSettlementItemServiceImpl;
+import com.service.Mt102ServiceImpl;
 import com.webservice.client.BankClientMt102;
 import com.webservice.client.BankClientMt910;
 import com.xsdschemas.clearingandsettlement.Mt102Request;
+import com.xsdschemas.clearingandsettlementitem.ClearingAndSettlementItem;
 import com.xsdschemas.rtgsresponseoriginator.Mt900Response;
 import com.xsdschemas.rtgsresponsereciever.Mt910Response;
 
@@ -26,12 +30,16 @@ public class ClearingSettlementEndpoint {
 	private final BankService bankService;
 	private final BankClientMt910 bankClientMt910;
 	private final BankClientMt102 bankClientMt102;
+	private final Mt102ServiceImpl mt102ServiceImpl;
+	private final ClearingAndSettlementItemServiceImpl clearingAndSettlementItemServiceImpl;
 	
 	@Autowired
-	public ClearingSettlementEndpoint(BankService bankService, BankClientMt910 bankClientMt910,BankClientMt102 bankClientMt102) {
+	public ClearingSettlementEndpoint(BankService bankService, BankClientMt910 bankClientMt910,BankClientMt102 bankClientMt102, Mt102ServiceImpl mt102ServiceImpl, ClearingAndSettlementItemServiceImpl clearingAndSettlementItemServiceImpl) {
 		this.bankService = bankService;
 		this.bankClientMt910 = bankClientMt910;
 		this.bankClientMt102 = bankClientMt102;
+		this.mt102ServiceImpl = mt102ServiceImpl;
+		this.clearingAndSettlementItemServiceImpl = clearingAndSettlementItemServiceImpl;
 	}
 	
 	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "mt102Request")
@@ -47,6 +55,23 @@ public class ClearingSettlementEndpoint {
 		
 		Mt900Response mt900Response = this.mapToMt900Response(request);
 		Mt910Response mt910Response = this.mapToMt910Response(request);
+		
+		
+		ArrayList<ClearingAndSettlementItem> list = new ArrayList<ClearingAndSettlementItem>();
+		list.addAll(request.getStatementItems());
+		
+		request.setStatementItems(null);
+		request.setDateCurrencyDate(request.getCurrencyDate().toGregorianCalendar().getTime());
+		request.setDateDate(request.getDate().toGregorianCalendar().getTime());
+		
+		request.setProcessed(true);
+		mt102ServiceImpl.save(request);
+		
+		for(int i = 0;i < list.size();i++){
+			list.get(i).setMt102Request(request);
+			list.get(i).setDateStatementDate(list.get(i).getStatementDate().toGregorianCalendar().getTime());
+			clearingAndSettlementItemServiceImpl.save(list.get(i));
+		}
 		
 		try {
 			bankClientMt910.sendM910Response(mt910Response, recieverBank.getMt910Service());
